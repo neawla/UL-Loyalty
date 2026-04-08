@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Urbana Privileges</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #1a2f45;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-pale: #f5eed8;
+    --cream: #faf8f3;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #ddd5c0;
+    --error: #9b2c2c;
+    --success: #1a5c3a;
+    --tier-member: #888780;
+    --tier-gold: #BA7517;
+    --tier-platinum: #185FA5;
+    --tier-diamond: #534AB7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+  header {
+    background: var(--navy);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+  }
+  .logo-block { display: flex; flex-direction: column; gap: 2px; }
+  .logo-name { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; color: var(--gold-light); letter-spacing: 0.08em; text-transform: uppercase; }
+  .logo-sub { font-size: 0.6rem; letter-spacing: 0.2em; color: rgba(201,168,76,0.6); text-transform: uppercase; }
+  .header-right { display: flex; align-items: center; gap: 1.5rem; }
+  .nav-link { color: rgba(255,255,255,0.6); font-size: 0.78rem; letter-spacing: 0.1em; text-decoration: none; text-transform: uppercase; transition: color 0.2s; cursor: pointer; background: none; border: none; font-family: 'Jost',sans-serif; }
+  .nav-link:hover { color: var(--gold-light); }
+  #memberName-header { color: rgba(255,255,255,0.85); font-size: 0.78rem; letter-spacing: 0.06em; }
+
+  /* ── LOGIN SCREEN ── */
+  .login-screen {
+    max-width: 440px;
+    margin: 5rem auto;
+    padding: 0 1.5rem;
+  }
+  .login-eyebrow { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
+  .login-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--navy); margin-bottom: 0.5rem; }
+  .login-sub { font-size: 0.82rem; color: var(--muted); line-height: 1.7; margin-bottom: 2rem; }
+
+  .step { display: none; }
+  .step.active { display: block; }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
+  label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+  input, select {
+    font-family: 'Jost', sans-serif; font-size: 0.9rem; padding: 0.75rem 1rem;
+    border: 1px solid var(--border); border-radius: 4px; background: #fff; color: var(--text);
+    transition: border-color 0.2s, box-shadow 0.2s; width: 100%;
+  }
+  input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.12); }
+  input.error { border-color: var(--error); }
+
+  .btn { width: 100%; padding: 0.9rem; font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+  .btn-primary { background: var(--navy); color: var(--gold-light); }
+  .btn-primary:hover { background: var(--navy-mid); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); margin-top: 0.75rem; }
+  .btn-ghost:hover { border-color: var(--navy); color: var(--navy); }
+
+  .otp-input { font-size: 1.5rem; letter-spacing: 0.5em; text-align: center; font-family: 'Cormorant Garamond', serif; }
+  .otp-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.5rem; text-align: center; }
+  .resend-btn { background: none; border: none; color: var(--gold); font-size: 0.75rem; cursor: pointer; font-family: 'Jost', sans-serif; padding: 0; text-decoration: underline; }
+
+  .alert { padding: 0.85rem 1rem; border-radius: 4px; font-size: 0.82rem; line-height: 1.6; margin-top: 1rem; display: none; }
+  .alert.show { display: block; }
+  .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: var(--error); }
+  .alert-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(201,168,76,0.3); border-top-color: var(--gold-light); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .enroll-link { text-align: center; margin-top: 1.5rem; font-size: 0.78rem; color: var(--muted); }
+  .enroll-link a { color: var(--navy); font-weight: 500; text-decoration: none; border-bottom: 1px solid var(--border); }
+
+  /* ── PORTAL DASHBOARD ── */
+  #portal { display: none; }
+
+  .portal-header {
+    background: var(--navy);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .portal-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(201,168,76,0.08) 0%, transparent 60%);
+  }
+  .portal-inner { max-width: 960px; margin: 0 auto; position: relative; }
+  .portal-greeting { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(201,168,76,0.7); margin-bottom: 0.4rem; }
+  .portal-name { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: #fff; margin-bottom: 0.25rem; }
+  .portal-id { font-size: 0.72rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); }
+
+  .tier-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem 0.4rem 0.6rem;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-top: 1rem;
+    border: 1px solid;
+  }
+  .tier-badge .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .badge-MEMBER  { background: rgba(136,135,128,0.15); border-color: rgba(136,135,128,0.4); color: #b4b2a9; }
+  .badge-GOLD    { background: rgba(186,117,23,0.15);  border-color: rgba(186,117,23,0.4);  color: #EF9F27; }
+  .badge-PLATINUM{ background: rgba(24,95,165,0.15);   border-color: rgba(24,95,165,0.4);   color: #85B7EB; }
+  .badge-DIAMOND { background: rgba(83,74,183,0.15);   border-color: rgba(83,74,183,0.4);   color: #AFA9EC; }
+
+  .points-display {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .points-number { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: #fff; line-height: 1; }
+  .points-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+
+  .progress-wrap { margin-top: 1rem; max-width: 400px; }
+  .progress-track { height: 3px; background: rgba(255,255,255,0.12); border-radius: 2px; }
+  .progress-bar { height: 3px; border-radius: 2px; transition: width 1s ease; }
+  .progress-text { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 0.4rem; }
+
+  /* ── PORTAL BODY ── */
+  .portal-body { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+
+  .section-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+  .card-full { grid-column: 1 / -1; }
+  .card-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── REDEMPTION CATALOGUE ── */
+  .catalogue-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; }
+  .reward-item {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .reward-item.affordable { border-color: rgba(26,92,58,0.3); }
+  .reward-item.affordable:hover { border-color: var(--success); }
+  .reward-pts { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--navy); }
+  .reward-pts-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .reward-name { font-size: 0.82rem; font-weight: 500; color: var(--text); margin: 0.5rem 0 0.25rem; }
+  .reward-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
+  .reward-badge {
+    position: absolute;
+    top: 0.6rem; right: 0.6rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .badge-enough { background: #dcfce7; color: #15803d; }
+  .badge-need { background: #f1f5f9; color: #64748b; }
+
+  /* ── TRANSACTIONS ── */
+  .txn-list { display: flex; flex-direction: column; gap: 0; }
+  .txn-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+    gap: 1rem;
+  }
+  .txn-item:last-child { border-bottom: none; }
+  .txn-type-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-earn { background: #16a34a; }
+  .dot-redeem { background: var(--gold); }
+  .txn-details { flex: 1; }
+  .txn-desc { font-size: 0.82rem; color: var(--text); }
+  .txn-date { font-size: 0.7rem; color: var(--muted); margin-top: 1px; }
+  .txn-points { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; text-align: right; white-space: nowrap; }
+  .pts-earn { color: #16a34a; }
+  .pts-redeem { color: var(--error); }
+  .txn-balance { font-size: 0.68rem; color: var(--muted); text-align: right; }
+
+  /* ── TIER JOURNEY ── */
+  .tier-journey { display: flex; align-items: center; gap: 0; }
+  .tier-step {
+    flex: 1;
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+    position: relative;
+  }
+  .tier-step::after {
+    content: '';
+    position: absolute;
+    top: 50%; right: 0;
+    width: 1px; height: 60%;
+    transform: translateY(-50%);
+    background: var(--border);
+  }
+  .tier-step:last-child::after { display: none; }
+  .tier-step.current { background: var(--gold-pale); border-radius: 6px; }
+  .ts-dot { width: 10px; height: 10px; border-radius: 50%; margin: 0 auto 0.4rem; }
+  .ts-name { font-size: 0.72rem; font-weight: 500; color: var(--text); }
+  .ts-pts { font-size: 0.65rem; color: var(--muted); }
+
+  .empty-state { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.82rem; }
+
+  footer { background: var(--navy); color: rgba(255,255,255,0.3); text-align: center; padding: 2rem; font-size: 0.7rem; letter-spacing: 0.08em; }
+
+  @media (max-width: 600px) {
+    .section-row { grid-template-columns: 1fr; }
+    .card-full { grid-column: 1; }
+    .catalogue-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-block">
+    <div class="logo-name">Urbana Langsuan</div>
+    <div class="logo-sub">Hotel &amp; Residence</div>
+  </div>
+  <div class="header-right">
+    <span id="memberName-header" style="display:none;"></span>
+    <button class="nav-link" id="logoutBtn" style="display:none;" onclick="logout()">Sign out</button>
+    <a href="index.html" class="nav-link">Enroll</a>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════
+     LOGIN FLOW
+══════════════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-screen">
+    <div class="login-eyebrow">Urbana Privileges</div>
+    <h1 class="login-title">Member portal</h1>
+    <p class="login-sub">Sign in with your registered email address. We'll send you a one-time code — no password needed.</p>
+
+    <!-- STEP 1: Email -->
+    <div class="step active" id="step1">
+      <div class="form-group">
+        <label for="loginEmail">Email address</label>
+        <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="alert alert-error" id="step1Error"></div>
+      <button class="btn btn-primary" id="sendOTPBtn" onclick="sendOTP()">Send login code</button>
+      <div class="enroll-link">
+        Not a member yet? <a href="index.html">Join Urbana Privileges</a>
+      </div>
+    </div>
+
+    <!-- STEP 2: OTP -->
+    <div class="step" id="step2">
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.7;" id="otpSentMsg"></p>
+      <div class="form-group">
+        <label for="otpInput">6-digit code</label>
+        <input type="text" id="otpInput" class="otp-input" maxlength="6" placeholder="— — — — — —" inputmode="numeric" autocomplete="one-time-code">
+      </div>
+      <div class="alert alert-error" id="step2Error"></div>
+      <button class="btn btn-primary" id="verifyOTPBtn" onclick="verifyOTP()">Sign in</button>
+      <button class="btn btn-ghost" onclick="goBack()">← Use a different email</button>
+      <p class="otp-hint">Didn't receive the code? <button class="resend-btn" onclick="sendOTP(true)">Resend</button></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MEMBER PORTAL DASHBOARD
+══════════════════════════════════════════════════ -->
+<div id="portal">
+
+  <div class="portal-header">
+    <div class="portal-inner">
+      <div class="portal-greeting">Welcome back</div>
+      <div class="portal-name" id="portalName">—</div>
+      <div class="portal-id" id="portalId">Member ID: —</div>
+
+      <div id="tierBadge" class="tier-badge badge-MEMBER">
+        <div class="dot" id="tierDot"></div>
+        <span id="tierLabel">Member</span>
+      </div>
+
+      <div class="points-display">
+        <div class="points-number" id="pointsNumber">0</div>
+        <div class="points-label">points</div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-bar" id="progressBar" style="width:0%;background:var(--gold);"></div>
+        </div>
+        <div class="progress-text" id="progressText"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="portal-body">
+
+    <div class="section-row">
+
+      <!-- Tier journey -->
+      <div class="card">
+        <div class="card-title">Tier journey</div>
+        <div class="tier-journey">
+          <div class="tier-step" id="tj-MEMBER">
+            <div class="ts-dot" style="background:#888780;margin:auto;"></div>
+            <div class="ts-name">Member</div>
+            <div class="ts-pts">0 pts</div>
+          </div>
+          <div class="tier-step" id="tj-GOLD">
+            <div class="ts-dot" style="background:#BA7517;margin:auto;"></div>
+            <div class="ts-name">Gold</div>
+            <div class="ts-pts">1,000 pts</div>
+          </div>
+          <div class="tier-step" id="tj-PLATINUM">
+            <div class="ts-dot" style="background:#185FA5;margin:auto;"></div>
+            <div class="ts-name">Platinum</div>
+            <div class="ts-pts">3,000 pts</div>
+          </div>
+          <div class="tier-step" id="tj-DIAMOND">
+            <div class="ts-dot" style="background:#534AB7;margin:auto;"></div>
+            <div class="ts-name">Diamond</div>
+            <div class="ts-pts">5,000 pts</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick stats -->
+      <div class="card">
+        <div class="card-title">Account summary</div>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div>
+            <div style="font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem;">Total points earned</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--navy);" id="statTotal">—</div>
+          </div>
+          <div>
+            <div style="font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem;">Points to next tier</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--navy);" id="statNext">—</div>
+          </div>
+          <div>
+            <div style="font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem;">Member since</div>
+            <div style="font-size:0.88rem;color:var(--text);" id="statJoin">—</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Redemption Catalogue -->
+    <div class="card card-full" style="margin-bottom:1.5rem;">
+      <div class="card-title">Redemption catalogue</div>
+      <div class="catalogue-grid" id="catalogueGrid">
+        <div class="empty-state">Loading rewards…</div>
+      </div>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="card card-full">
+      <div class="card-title">Points history</div>
+      <div class="txn-list" id="txnList">
+        <div class="empty-state">Loading history…</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  &copy; 2025 Urbana Langsuan Hotel &amp; Residence &nbsp;|&nbsp; Operated by Vari Asset Co., Ltd.
+</footer>
+
+<script>
+const API_URL = 'YOUR_GAS_WEB_APP_URL_HERE';
+let memberData = null;
+
+function $(id) { return document.getElementById(id); }
+
+function gasCall(action, params) {
+    var qs = 'action=' + encodeURIComponent(action);
+    for (var k in params) {
+      if (params[k] !== undefined && params[k] !== null) {
+        qs += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+      }
+    }
+    var url = API_URL + '?' + qs;
+    var proxied = 'https://corsproxy.io/?' + encodeURIComponent(url);
+    return fetch(proxied)
+      .then(function(r) { return r.json(); })
+      .catch(function(e) { throw new Error('Connection error: ' + e.message); });
+  }
+function gasGet(action, params)  { return gasCall(action, params); }
+function gasPost(action, params) { return gasCall(action, params); }
+
+// ── STORAGE ──
+function saveSession(memberId, email) {
+  sessionStorage.setItem('ul_member', JSON.stringify({ memberId, email, ts: Date.now() }));
+}
+function getSession() {
+  try { return JSON.parse(sessionStorage.getItem('ul_member')); } catch { return null; }
+}
+function clearSession() { sessionStorage.removeItem('ul_member'); }
+
+function setLoading(btnId, loading, defaultText) {
+  const btn = $(btnId);
+  btn.disabled = loading;
+  btn.innerHTML = loading ? '<span class="spinner"></span> Please wait…' : defaultText;
+}
+
+// ── AUTH ──
+async function sendOTP(isResend = false) {
+  const email = $('loginEmail').value.trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showAlert('step1Error', 'Please enter a valid email address');
+    return;
+  }
+  hideAlert('step1Error');
+  setLoading('sendOTPBtn', true, 'Send login code');
+
+  try {
+    const res = await gasGet('requestOTP', { email: email });
+    const data = res;
+    if (data.success) {
+      $('otpSentMsg').textContent = `A 6-digit code has been sent to ${email}. Please check your inbox (and spam folder).`;
+      $('step1').classList.remove('active');
+      $('step2').classList.add('active');
+      setTimeout(() => $('otpInput').focus(), 100);
+      if (isResend) showAlert('step2Error', 'New code sent!', true);
+    } else {
+      showAlert('step1Error', data.error || 'Could not send code. Please try again.');
+    }
+  } catch {
+    showAlert('step1Error', 'Connection error. Please try again.');
+  }
+  setLoading('sendOTPBtn', false, 'Send login code');
+}
+
+async function verifyOTP() {
+  const email = $('loginEmail').value.trim().toLowerCase();
+  const otp = $('otpInput').value.trim();
+  if (otp.length !== 6) { showAlert('step2Error', 'Please enter the 6-digit code'); return; }
+  hideAlert('step2Error');
+  setLoading('verifyOTPBtn', true, 'Sign in');
+
+  try {
+    const data = await gasGet('verifyOTP', { email: email, otp: otp });
+    if (data.success) {
+      saveSession(data.memberId, email);
+      await loadPortal(data.memberId, email);
+    } else {
+      showAlert('step2Error', data.error || 'Invalid code. Please try again.');
+    }
+  } catch {
+    showAlert('step2Error', 'Connection error. Please try again.');
+  }
+  setLoading('verifyOTPBtn', false, 'Sign in');
+}
+
+function goBack() {
+  $('step2').classList.remove('active');
+  $('step1').classList.add('active');
+  $('otpInput').value = '';
+}
+
+function logout() {
+  clearSession();
+  memberData = null;
+  $('portal').style.display = 'none';
+  $('loginScreen').style.display = 'block';
+  $('logoutBtn').style.display = 'none';
+  $('memberName-header').style.display = 'none';
+  goBack();
+}
+
+// ── PORTAL ──
+async function loadPortal(memberId, email) {
+  try {
+    const [memberRes, txnRes, catRes] = await Promise.all([
+      gasGet('getMember', { memberId: memberId }),
+      gasGet('getTransactions', { memberId: memberId }),
+      gasGet('getCatalogue', {}),
+    ]);
+
+    if (!memberRes.success) { logout(); return; }
+
+    memberData = memberRes.member;
+
+    renderHeader(memberData);
+    renderStats(memberData);
+    renderTierJourney(memberData.tier);
+    if (catRes.success) renderCatalogue(catRes.catalogue, memberData.points);
+    if (txnRes.success) renderTransactions(txnRes.transactions);
+
+    $('loginScreen').style.display = 'none';
+    $('portal').style.display = 'block';
+    $('logoutBtn').style.display = 'block';
+    $('memberName-header').style.display = 'block';
+    $('memberName-header').textContent = memberData.firstName;
+  } catch (e) {
+    showAlert('step2Error', 'Failed to load your account. Please try again.');
+  }
+}
+
+function renderHeader(m) {
+  $('portalName').textContent = m.firstName + ' ' + m.lastName;
+  $('portalId').textContent = 'Member ID: ' + m.memberId;
+
+  const badge = $('tierBadge');
+  badge.className = 'tier-badge badge-' + m.tier;
+  const colors = { MEMBER:'#888780', GOLD:'#EF9F27', PLATINUM:'#85B7EB', DIAMOND:'#AFA9EC' };
+  $('tierDot').style.background = colors[m.tier];
+  $('tierLabel').textContent = m.tierConfig.name;
+
+  $('pointsNumber').textContent = m.points.toLocaleString();
+
+  // Progress bar
+  const tierRanges = {
+    MEMBER:   { from: 0,    to: 1000, nextName: 'Gold' },
+    GOLD:     { from: 1000, to: 3000, nextName: 'Platinum' },
+    PLATINUM: { from: 3000, to: 5000, nextName: 'Diamond' },
+    DIAMOND:  { from: 5000, to: 5000, nextName: null },
+  };
+  const range = tierRanges[m.tier];
+  if (range.nextName) {
+    const pct = Math.min(100, ((m.points - range.from) / (range.to - range.from)) * 100);
+    $('progressBar').style.width = pct + '%';
+    $('progressText').textContent = m.nextTier.needed + ' pts to ' + range.nextName;
+  } else {
+    $('progressBar').style.width = '100%';
+    $('progressText').textContent = 'You have reached Diamond — our highest tier';
+  }
+}
+
+function renderStats(m) {
+  $('statTotal').textContent = m.points.toLocaleString();
+  $('statNext').textContent = m.nextTier.needed === 0 ? 'Top tier achieved' : m.nextTier.needed.toLocaleString() + ' pts';
+  $('statJoin').textContent = m.joinDate ? new Date(m.joinDate).toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' }) : '—';
+}
+
+function renderTierJourney(currentTier) {
+  const order = ['MEMBER','GOLD','PLATINUM','DIAMOND'];
+  const idx = order.indexOf(currentTier);
+  order.forEach((tier, i) => {
+    const el = $('tj-' + tier);
+    if (el) el.classList.toggle('current', i === idx);
+  });
+}
+
+function renderCatalogue(items, userPoints) {
+  const grid = $('catalogueGrid');
+  if (!items.length) { grid.innerHTML = '<div class="empty-state">No rewards available</div>'; return; }
+
+  grid.innerHTML = items.map(item => {
+    const can = userPoints >= item.points;
+    return `<div class="reward-item ${can ? 'affordable' : ''}">
+      <span class="reward-badge ${can ? 'badge-enough' : 'badge-need'}">${can ? 'Redeemable' : 'Need ' + (item.points - userPoints).toLocaleString() + ' more'}</span>
+      <div class="reward-pts">${item.points.toLocaleString()}</div>
+      <div class="reward-pts-label">points</div>
+      <div class="reward-name">${item.name}</div>
+      <div class="reward-desc">${item.description}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderTransactions(txns) {
+  const list = $('txnList');
+  if (!txns.length) { list.innerHTML = '<div class="empty-state">No transactions yet. Points will appear here after your first stay.</div>'; return; }
+
+  list.innerHTML = txns.map(t => {
+    const isEarn = t.type === 'EARN';
+    const ptsStr = (isEarn ? '+' : '') + t.points.toLocaleString();
+    const dateStr = new Date(t.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    return `<div class="txn-item">
+      <div class="txn-type-dot ${isEarn ? 'dot-earn' : 'dot-redeem'}"></div>
+      <div class="txn-details">
+        <div class="txn-desc">${t.description}</div>
+        <div class="txn-date">${dateStr}</div>
+      </div>
+      <div>
+        <div class="txn-points ${isEarn ? 'pts-earn' : 'pts-redeem'}">${ptsStr}</div>
+        <div class="txn-balance">${t.balance.toLocaleString()} pts balance</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── UTILS ──
+function showAlert(id, msg, isInfo = false) {
+  const el = $(id);
+  el.textContent = msg;
+  el.className = 'alert ' + (isInfo ? 'alert-info' : 'alert-error') + ' show';
+}
+function hideAlert(id) {
+  const el = $(id); el.classList.remove('show');
+}
+
+// ── INIT ──
+window.addEventListener('load', async () => {
+  const session = getSession();
+  if (session && (Date.now() - session.ts) < 8 * 60 * 60 * 1000) { // 8hr session
+    await loadPortal(session.memberId, session.email);
+  }
+});
+
+// Auto-submit OTP when 6 digits entered
+$('otpInput').addEventListener('input', function() {
+  if (this.value.length === 6) verifyOTP();
+});
+
+$('loginEmail').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') sendOTP();
+});
+</script>
+</body>
+</html>
