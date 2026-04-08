@@ -183,7 +183,7 @@
   }
   label .req { color: var(--gold); margin-left: 2px; }
 
-  input:not([type="checkbox"]), select {
+  input, select {
     font-family: 'Jost', sans-serif;
     font-size: 0.9rem;
     padding: 0.75rem 1rem;
@@ -194,13 +194,6 @@
     transition: border-color 0.2s, box-shadow 0.2s;
     width: 100%;
     appearance: none;
-  }
-input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: var(--navy);
-    cursor: pointer;
-    appearance: auto;
   }
   input:focus, select:focus {
     outline: none;
@@ -230,7 +223,8 @@ input[type="checkbox"] {
     align-items: flex-start;
     margin-bottom: 0.75rem;
   }
- .consent-row input[type="checkbox"] {
+  .consent-row:last-child { margin-bottom: 0; }
+  .consent-row input[type="checkbox"] {
     width: 16px; height: 16px;
     min-width: 16px;
     margin-top: 2px;
@@ -238,14 +232,14 @@ input[type="checkbox"] {
     padding: 0;
     border: none;
     box-shadow: none;
-    cursor: pointer;
-    position: relative;
-    z-index: 10;
-    opacity: 1;
-    pointer-events: all;
   }
   .consent-row input[type="checkbox"]:focus { box-shadow: none; }
-  .consent-row label { cursor: pointer; pointer-events: all; }
+  .consent-text {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .consent-text strong { color: var(--text); font-weight: 500; }
 
   /* ── SUBMIT ── */
   .submit-area { margin-top: 2rem; }
@@ -504,7 +498,7 @@ input[type="checkbox"] {
 </footer>
 
 <script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzwxZgg685hGkVyPammqldac4zgnkY-vCuUe8mbMHzTIKVxDlhvD6fdDRg4ALAavjEa/exec';
+  const API_URL = 'YOUR_GAS_WEB_APP_URL_HERE'; // Replace after deploying GAS
 
   function $(id) { return document.getElementById(id); }
 
@@ -534,8 +528,6 @@ input[type="checkbox"] {
       document.head.appendChild(script);
     });
   }
-
-  function $(id) { return document.getElementById(id); }
 
   function validate() {
     let valid = true;
