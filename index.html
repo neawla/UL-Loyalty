@@ -223,8 +223,7 @@
     align-items: flex-start;
     margin-bottom: 0.75rem;
   }
-  .consent-row:last-child { margin-bottom: 0; }
-  .consent-row input[type="checkbox"] {
+ .consent-row input[type="checkbox"] {
     width: 16px; height: 16px;
     min-width: 16px;
     margin-top: 2px;
@@ -232,14 +231,14 @@
     padding: 0;
     border: none;
     box-shadow: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+    opacity: 1;
+    pointer-events: all;
   }
   .consent-row input[type="checkbox"]:focus { box-shadow: none; }
-  .consent-text {
-    font-size: 0.8rem;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-  .consent-text strong { color: var(--text); font-weight: 500; }
+  .consent-row label { cursor: pointer; pointer-events: all; }
 
   /* ── SUBMIT ── */
   .submit-area { margin-top: 2rem; }
