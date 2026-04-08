@@ -183,7 +183,7 @@
   }
   label .req { color: var(--gold); margin-left: 2px; }
 
-  input, select {
+  input:not([type="checkbox"]), select {
     font-family: 'Jost', sans-serif;
     font-size: 0.9rem;
     padding: 0.75rem 1rem;
@@ -194,6 +194,13 @@
     transition: border-color 0.2s, box-shadow 0.2s;
     width: 100%;
     appearance: none;
+  }
+input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--navy);
+    cursor: pointer;
+    appearance: auto;
   }
   input:focus, select:focus {
     outline: none;
