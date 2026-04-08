@@ -401,37 +401,26 @@
 </footer>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbzwxZgg685hGkVyPammqldac4zgnkY-vCuUe8mbMHzTIKVxDlhvD6fdDRg4ALAavjEa/exec';
+const API_URL = 'YOUR_GAS_WEB_APP_URL_HERE';
 let memberData = null;
 
 function $(id) { return document.getElementById(id); }
 
-function gasGet(action, params) {
-  return new Promise(function(resolve, reject) {
-    var cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
-    var qs = 'action=' + encodeURIComponent(action) + '&callback=' + cbName;
+function gasCall(action, params) {
+    var qs = 'action=' + encodeURIComponent(action);
     for (var k in params) {
       if (params[k] !== undefined && params[k] !== null) {
         qs += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
       }
     }
-    window[cbName] = function(data) {
-      delete window[cbName];
-      var el = document.getElementById(cbName);
-      if (el) el.remove();
-      resolve(data);
-    };
-    var script = document.createElement('script');
-    script.id = cbName;
-    script.src = API_URL + '?' + qs;
-    script.onerror = function() {
-      delete window[cbName];
-      script.remove();
-      reject(new Error('Network error'));
-    };
-    document.head.appendChild(script);
-  });
-}
+    var url = API_URL + '?' + qs;
+    var proxied = 'https://corsproxy.io/?' + encodeURIComponent(url);
+    return fetch(proxied)
+      .then(function(r) { return r.json(); })
+      .catch(function(e) { throw new Error('Connection error: ' + e.message); });
+  }
+function gasGet(action, params)  { return gasCall(action, params); }
+function gasPost(action, params) { return gasCall(action, params); }
 
 // ── STORAGE ──
 function saveSession(memberId, email) {

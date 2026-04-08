@@ -503,30 +503,17 @@
   function $(id) { return document.getElementById(id); }
 
   function gasCall(action, params) {
-    return new Promise(function(resolve, reject) {
-      var cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
-      var qs = 'action=' + encodeURIComponent(action) + '&callback=' + cbName;
-      for (var k in params) {
-        if (params[k] !== undefined && params[k] !== null) {
-          qs += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
-        }
+    var qs = 'action=' + encodeURIComponent(action);
+    for (var k in params) {
+      if (params[k] !== undefined && params[k] !== null) {
+        qs += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
       }
-      window[cbName] = function(data) {
-        delete window[cbName];
-        var el = document.getElementById(cbName);
-        if (el) el.remove();
-        resolve(data);
-      };
-      var script = document.createElement('script');
-      script.id = cbName;
-      script.src = API_URL + '?' + qs;
-      script.onerror = function() {
-        delete window[cbName];
-        script.remove();
-        reject(new Error('Network error'));
-      };
-      document.head.appendChild(script);
-    });
+    }
+    var url = API_URL + '?' + qs;
+    var proxied = 'https://corsproxy.io/?' + encodeURIComponent(url);
+    return fetch(proxied)
+      .then(function(r) { return r.json(); })
+      .catch(function(e) { throw new Error('Connection error: ' + e.message); });
   }
 
   function validate() {
