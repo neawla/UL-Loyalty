@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Urbana Privileges — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a; --navy-mid: #1a2f45; --gold: #c9a84c; --gold-light: #e8c97a;
+    --cream: #faf8f3; --text: #1a1a2e; --muted: #6b7280; --border: #ddd5c0;
+    --error: #9b2c2c; --success: #1a5c3a; --gold-pale: #f5eed8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Jost', sans-serif; background: #f4f2ed; color: var(--text); min-height: 100vh; }
+
+  header {
+    background: var(--navy);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+  }
+  .logo-wrap { display: flex; align-items: center; gap: 1rem; }
+  .logo-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; color: var(--gold-light); letter-spacing: 0.08em; text-transform: uppercase; }
+  .admin-badge { background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3); color: var(--gold); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; }
+  .header-right { display: flex; align-items: center; gap: 1.5rem; }
+  .staff-name { color: rgba(255,255,255,0.6); font-size: 0.78rem; }
+  .btn-logout { background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 3px; cursor: pointer; font-family: 'Jost', sans-serif; transition: all 0.2s; }
+  .btn-logout:hover { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.8); }
+
+  /* ── LOGIN ── */
+  .admin-login { max-width: 380px; margin: 6rem auto; padding: 0 1.5rem; }
+  .login-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 2rem; }
+  .login-eyebrow { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .login-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: var(--navy); margin-bottom: 1.5rem; }
+
+  label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 500; display: block; margin-bottom: 0.35rem; }
+  input, select {
+    font-family: 'Jost', sans-serif; font-size: 0.88rem; padding: 0.65rem 0.9rem;
+    border: 1px solid var(--border); border-radius: 4px; background: #fff; color: var(--text);
+    transition: border-color 0.2s; width: 100%;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.1); }
+
+  .field { margin-bottom: 1rem; }
+
+  .btn { padding: 0.7rem 1.25rem; font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+  .btn-primary { background: var(--navy); color: var(--gold-light); }
+  .btn-primary:hover { background: var(--navy-mid); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-sm { padding: 0.5rem 1rem; font-size: 0.7rem; }
+  .btn-danger { background: #7f1d1d; color: #fca5a5; }
+  .btn-danger:hover { background: #991b1b; }
+  .btn-success { background: #14532d; color: #86efac; }
+  .btn-success:hover { background: #166534; }
+  .btn-full { width: 100%; }
+
+  .alert { padding: 0.75rem 1rem; border-radius: 4px; font-size: 0.8rem; line-height: 1.5; margin-top: 0.75rem; display: none; }
+  .alert.show { display: block; }
+  .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: var(--error); }
+  .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: var(--success); }
+  .alert-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+
+  .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(201,168,76,0.3); border-top-color: var(--gold-light); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 5px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── ADMIN LAYOUT ── */
+  #adminPanel { display: none; }
+  .admin-layout { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 60px); }
+
+  /* Sidebar */
+  .sidebar { background: var(--navy-mid); border-right: 1px solid rgba(201,168,76,0.1); padding: 1.5rem 0; }
+  .sidebar-section { margin-bottom: 0.25rem; }
+  .sidebar-label { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(201,168,76,0.45); padding: 0.75rem 1.25rem 0.4rem; }
+  .sidebar-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 1.25rem; cursor: pointer; font-size: 0.82rem; color: rgba(255,255,255,0.55); transition: all 0.15s; border: none; background: none; font-family: 'Jost', sans-serif; width: 100%; text-align: left; }
+  .sidebar-item:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.04); }
+  .sidebar-item.active { color: var(--gold-light); background: rgba(201,168,76,0.08); border-left: 2px solid var(--gold); }
+  .sidebar-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.6; flex-shrink: 0; }
+
+  /* Main content */
+  .main-content { padding: 2rem; overflow-y: auto; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .panel-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; color: var(--navy); margin-bottom: 0.25rem; }
+  .panel-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 1.75rem; }
+
+  /* Stats cards */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; }
+  .stat-label { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+  .stat-value { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--navy); }
+  .stat-sub { font-size: 0.7rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* Member card */
+  .member-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; display: none; }
+  .member-card.show { display: block; }
+  .mc-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+  .mc-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--gold-light); flex-shrink: 0; }
+  .mc-name { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; color: var(--navy); }
+  .mc-id { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em; }
+  .mc-tier { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.3rem; }
+  .tier-MEMBER  { background: #f1f0ee; color: #5F5E5A; }
+  .tier-GOLD    { background: #FAEEDA; color: #854F0B; }
+  .tier-PLATINUM{ background: #E6F1FB; color: #185FA5; }
+  .tier-DIAMOND { background: #EEEDFE; color: #534AB7; }
+  .mc-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .mc-stat-label { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.2rem; }
+  .mc-stat-value { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--navy); }
+
+  /* Search results */
+  .search-results { background: #fff; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 1rem; display: none; }
+  .search-results.show { display: block; }
+  .result-item { display: flex; align-items: center; padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s; gap: 1rem; }
+  .result-item:last-child { border-bottom: none; }
+  .result-item:hover { background: var(--gold-pale); }
+  .result-name { font-size: 0.88rem; font-weight: 500; color: var(--text); }
+  .result-meta { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
+  .result-pts { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--navy); margin-left: auto; }
+
+  /* Form sections */
+  .form-section { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; }
+  .form-section-title { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+  .form-row { display: grid; gap: 1rem; }
+  .form-2 { grid-template-columns: 1fr 1fr; }
+  .form-3 { grid-template-columns: 2fr 1fr 1fr; }
+
+  .points-preview { background: var(--gold-pale); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; margin-top: 0.75rem; display: none; }
+  .points-preview.show { display: block; }
+  .pp-label { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .pp-value { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--navy); }
+
+  /* Catalogue for admin */
+  .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 0.75rem; }
+  .cat-item { border: 1px solid var(--border); border-radius: 6px; padding: 1rem; cursor: pointer; transition: all 0.15s; }
+  .cat-item:hover { border-color: var(--gold); background: var(--gold-pale); }
+  .cat-item.selected { border-color: var(--navy); background: #eef0f5; }
+  .cat-pts { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--navy); }
+  .cat-name { font-size: 0.8rem; font-weight: 500; margin-top: 0.25rem; }
+  .cat-req { font-size: 0.68rem; color: var(--muted); }
+
+  @media (max-width: 800px) {
+    .admin-layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <div class="logo-name">Urbana Privileges</div>
+    <div class="admin-badge">Admin</div>
+  </div>
+  <div class="header-right">
+    <span class="staff-name" id="staffDisplay" style="display:none;">Front Desk</span>
+    <button class="btn-logout" id="adminLogoutBtn" onclick="adminLogout()" style="display:none;">Sign out</button>
+  </div>
+</header>
+
+<!-- LOGIN -->
+<div id="adminLoginScreen">
+  <div class="admin-login">
+    <div class="login-card">
+      <div class="login-eyebrow">Staff access</div>
+      <div class="login-title">Admin sign in</div>
+      <div class="field">
+        <label for="staffName">Your name / shift</label>
+        <input type="text" id="staffName" placeholder="e.g. Noon / Morning shift">
+      </div>
+      <div class="field">
+        <label for="adminPass">Admin password</label>
+        <input type="password" id="adminPass" placeholder="Enter password">
+      </div>
+      <div class="alert alert-error" id="loginError"></div>
+      <button class="btn btn-primary btn-full" style="margin-top:0.75rem;" onclick="adminLogin()">Sign in</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Operations</div>
+        <button class="sidebar-item active" onclick="showPanel('dashboard')">
+          <div class="sidebar-dot"></div> Dashboard
+        </button>
+        <button class="sidebar-item" onclick="showPanel('points')">
+          <div class="sidebar-dot"></div> Post points
+        </button>
+        <button class="sidebar-item" onclick="showPanel('redeem')">
+          <div class="sidebar-dot"></div> Process redemption
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Members</div>
+        <button class="sidebar-item" onclick="showPanel('lookup')">
+          <div class="sidebar-dot"></div> Member lookup
+        </button>
+      </div>
+    </aside>
+
+    <div class="main-content">
+
+      <!-- DASHBOARD -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="panel-title">Overview</div>
+        <div class="panel-sub">Live programme statistics</div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total members</div>
+            <div class="stat-value" id="dash-total">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">New this month</div>
+            <div class="stat-value" id="dash-new">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Points earned (month)</div>
+            <div class="stat-value" id="dash-earned">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Gold / Platinum / Diamond</div>
+            <div class="stat-value" id="dash-tiers">—</div>
+          </div>
+        </div>
+        <div class="form-section">
+          <div class="form-section-title">Quick member lookup</div>
+          <div style="display:flex;gap:0.75rem;">
+            <input type="text" id="quickSearch" placeholder="Search by name, email, or member ID…" style="flex:1;" oninput="liveSearch(this.value,'quickResults')">
+          </div>
+          <div class="search-results" id="quickResults"></div>
+        </div>
+      </div>
+
+      <!-- POST POINTS -->
+      <div class="panel" id="panel-points">
+        <div class="panel-title">Post points</div>
+        <div class="panel-sub">Search for the member, enter the settled folio amount, and post.</div>
+
+        <div class="form-section">
+          <div class="form-section-title">Find member</div>
+          <input type="text" id="pointsSearch" placeholder="Name, email, or member ID…" oninput="liveSearch(this.value,'pointsResults')">
+          <div class="search-results" id="pointsResults"></div>
+        </div>
+
+        <div class="member-card" id="pointsMemberCard">
+          <div class="mc-header">
+            <div class="mc-avatar" id="pm-avatar">—</div>
+            <div>
+              <div class="mc-name" id="pm-name">—</div>
+              <div class="mc-id" id="pm-id">—</div>
+              <span class="mc-tier" id="pm-tier">—</span>
+            </div>
+          </div>
+          <div class="mc-stats">
+            <div><div class="mc-stat-label">Current points</div><div class="mc-stat-value" id="pm-pts">—</div></div>
+            <div><div class="mc-stat-label">Member since</div><div class="mc-stat-value" style="font-size:1rem;padding-top:0.3rem;" id="pm-join">—</div></div>
+            <div><div class="mc-stat-label">Status</div><div class="mc-stat-value" style="font-size:1rem;padding-top:0.3rem;" id="pm-status">—</div></div>
+          </div>
+        </div>
+
+        <div class="form-section" id="pointsForm" style="display:none;">
+          <div class="form-section-title">Folio details</div>
+          <div class="form-row form-2">
+            <div class="field">
+              <label>Folio amount (THB) *</label>
+              <input type="number" id="folioAmount" placeholder="e.g. 15000" min="100" oninput="calcPoints()">
+            </div>
+            <div class="field">
+              <label>Folio / room number</label>
+              <input type="text" id="folioRef" placeholder="e.g. Room 405 / 2025-1234">
+            </div>
+          </div>
+          <div class="points-preview" id="pointsPreview">
+            <div class="pp-label">Points to be awarded</div>
+            <div class="pp-value" id="previewPts">0</div>
+          </div>
+          <div class="alert alert-error" id="pointsError"></div>
+          <div class="alert alert-success" id="pointsSuccess"></div>
+          <div style="display:flex;gap:0.75rem;margin-top:1rem;">
+            <button class="btn btn-success" onclick="submitPoints()">Confirm &amp; post points</button>
+            <button class="btn" style="background:#f4f2ed;color:var(--muted);" onclick="clearPointsForm()">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- REDEEM -->
+      <div class="panel" id="panel-redeem">
+        <div class="panel-title">Process redemption</div>
+        <div class="panel-sub">Find the member, select a reward, confirm the redemption.</div>
+
+        <div class="form-section">
+          <div class="form-section-title">Find member</div>
+          <input type="text" id="redeemSearch" placeholder="Name, email, or member ID…" oninput="liveSearch(this.value,'redeemResults')">
+          <div class="search-results" id="redeemResults"></div>
+        </div>
+
+        <div class="member-card" id="redeemMemberCard">
+          <div class="mc-header">
+            <div class="mc-avatar" id="rm-avatar">—</div>
+            <div>
+              <div class="mc-name" id="rm-name">—</div>
+              <div class="mc-id" id="rm-id">—</div>
+              <span class="mc-tier" id="rm-tier">—</span>
+            </div>
+          </div>
+          <div class="mc-stats">
+            <div><div class="mc-stat-label">Available points</div><div class="mc-stat-value" id="rm-pts">—</div></div>
+          </div>
+        </div>
+
+        <div class="form-section" id="redeemForm" style="display:none;">
+          <div class="form-section-title">Select reward</div>
+          <div class="cat-grid" id="redeemCatGrid">Loading…</div>
+          <div class="alert alert-error" id="redeemError" style="margin-top:1rem;"></div>
+          <div class="alert alert-success" id="redeemSuccess" style="margin-top:1rem;"></div>
+          <div style="display:flex;gap:0.75rem;margin-top:1.25rem;">
+            <button class="btn btn-danger" id="confirmRedeemBtn" onclick="submitRedeem()" disabled>Confirm redemption</button>
+            <button class="btn" style="background:#f4f2ed;color:var(--muted);" onclick="clearRedeemForm()">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOOKUP -->
+      <div class="panel" id="panel-lookup">
+        <div class="panel-title">Member lookup</div>
+        <div class="panel-sub">View full member profile and transaction history.</div>
+        <div class="form-section">
+          <div class="form-section-title">Search</div>
+          <input type="text" id="lookupSearch" placeholder="Name, email, or member ID…" oninput="liveSearch(this.value,'lookupResults')">
+          <div class="search-results" id="lookupResults"></div>
+        </div>
+        <div class="member-card" id="lookupMemberCard">
+          <div class="mc-header">
+            <div class="mc-avatar" id="lk-avatar">—</div>
+            <div>
+              <div class="mc-name" id="lk-name">—</div>
+              <div class="mc-id" id="lk-id">—</div>
+              <span class="mc-tier" id="lk-tier">—</span>
+            </div>
+          </div>
+          <div class="mc-stats">
+            <div><div class="mc-stat-label">Points</div><div class="mc-stat-value" id="lk-pts">—</div></div>
+            <div><div class="mc-stat-label">Email</div><div class="mc-stat-value" style="font-size:0.82rem;padding-top:0.5rem;" id="lk-email">—</div></div>
+            <div><div class="mc-stat-label">Phone</div><div class="mc-stat-value" style="font-size:0.82rem;padding-top:0.5rem;" id="lk-phone">—</div></div>
+          </div>
+        </div>
+        <div id="lookupTxns" style="display:none;">
+          <div style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem;">Recent transactions</div>
+          <div id="lookupTxnList" style="background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbzwxZgg685hGkVyPammqldac4zgnkY-vCuUe8mbMHzTIKVxDlhvD6fdDRg4ALAavjEa/exec';
+let staffName = '';
+let selectedRedeemMember = null;
+let selectedReward = null;
+let selectedPointsMember = null;
+let catalogue = [];
+
+function $(id) { return document.getElementById(id); }
+function showAlert(id, msg, type='error') {
+  const el = $(id);
+  el.textContent = msg;
+  el.className = 'alert alert-' + type + ' show';
+}
+function hideAlert(id) { $(id).classList.remove('show'); }
+
+function gasCall(action, params) {
+  return new Promise(function(resolve, reject) {
+    var cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    var qs = 'action=' + encodeURIComponent(action) + '&callback=' + cbName;
+    for (var k in params) {
+      if (params[k] !== undefined && params[k] !== null) {
+        qs += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+      }
+    }
+    window[cbName] = function(data) {
+      delete window[cbName];
+      var el = document.getElementById(cbName);
+      if (el) el.remove();
+      resolve(data);
+    };
+    var script = document.createElement('script');
+    script.id = cbName;
+    script.src = API_URL + '?' + qs;
+    script.onerror = function() {
+      delete window[cbName];
+      script.remove();
+      reject(new Error('Network error'));
+    };
+    document.head.appendChild(script);
+  });
+}
+function gasGet(action, params)  { return gasCall(action, params); }
+function gasPost(action, params) { return gasCall(action, params); }
+
+// ── ADMIN LOGIN ──
+async function adminLogin() {
+  const name = $('staffName').value.trim();
+  const pass = $('adminPass').value;
+  if (!name) { showAlert('loginError','Please enter your name'); return; }
+  if (!pass) { showAlert('loginError','Please enter the password'); return; }
+
+  try {
+    const data = await gasGet('adminLogin', { password: pass });
+    if (data.success) {
+      staffName = name;
+      sessionStorage.setItem('ul_admin', JSON.stringify({ name, ts: Date.now() }));
+      $('adminLoginScreen').style.display = 'none';
+      $('adminPanel').style.display = 'block';
+      $('staffDisplay').textContent = name;
+      $('staffDisplay').style.display = 'block';
+      $('adminLogoutBtn').style.display = 'block';
+      loadDashboard();
+      loadCatalogue();
+    } else {
+      showAlert('loginError', 'Incorrect password');
+    }
+  } catch {
+    showAlert('loginError', 'Connection error');
+  }
+}
+
+function adminLogout() {
+  sessionStorage.removeItem('ul_admin');
+  location.reload();
+}
+
+// ── PANELS ──
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  $('panel-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ── DASHBOARD ──
+async function loadDashboard() {
+  try {
+    const data = await gasGet('getDashboard', {});
+    if (data.success) {
+      const s = data.stats;
+      $('dash-total').textContent = s.total.toLocaleString();
+      $('dash-new').textContent = s.newThisMonth.toLocaleString();
+      $('dash-earned').textContent = s.earnedThisMonth.toLocaleString();
+      $('dash-tiers').textContent = s.gold + ' / ' + s.platinum + ' / ' + s.diamond;
+    }
+  } catch {}
+}
+
+// ── SEARCH ──
+let searchTimer = null;
+function liveSearch(query, resultsId) {
+  clearTimeout(searchTimer);
+  if (query.length < 2) { hideResults(resultsId); return; }
+  searchTimer = setTimeout(async () => {
+    try {
+      const data = await gasGet('searchMember', { query: query });
+      if (data.success) renderResults(data.results, resultsId);
+    } catch {}
+  }, 350);
+}
+
+function renderResults(results, resultsId) {
+  const el = $(resultsId);
+  if (!results.length) {
+    el.innerHTML = '<div style="padding:1rem;font-size:0.82rem;color:var(--muted);">No members found</div>';
+    el.classList.add('show');
+    return;
+  }
+  el.innerHTML = results.map(r => `
+    <div class="result-item" onclick="selectMember('${r.memberId}','${resultsId}')">
+      <div>
+        <div class="result-name">${r.firstName} ${r.lastName}</div>
+        <div class="result-meta">${r.memberId} &nbsp;·&nbsp; ${r.email}</div>
+      </div>
+      <div>
+        <span class="mc-tier tier-${r.tier}" style="font-size:0.6rem;">${r.tier}</span>
+      </div>
+      <div class="result-pts">${r.points.toLocaleString()} pts</div>
+    </div>
+  `).join('');
+  el.classList.add('show');
+}
+
+function hideResults(id) { $(id).classList.remove('show'); }
+
+async function selectMember(memberId, resultsId) {
+  hideResults(resultsId);
+  const data = await gasGet('getMember', { memberId: memberId });
+  if (!data.success) return;
+  const m = data.member;
+
+  if (resultsId === 'pointsResults' || resultsId === 'quickResults') {
+    if (resultsId === 'pointsResults') {
+      selectedPointsMember = m;
+      populateMemberCard('pm', m);
+      $('pointsMemberCard').classList.add('show');
+      $('pointsForm').style.display = 'block';
+    } else {
+      showLookupMember(m);
+    }
+  } else if (resultsId === 'redeemResults') {
+    selectedRedeemMember = m;
+    selectedReward = null;
+    populateMemberCard('rm', m);
+    $('redeemMemberCard').classList.add('show');
+    $('redeemForm').style.display = 'block';
+    renderRedeemCatalogue(m.points);
+    $('confirmRedeemBtn').disabled = true;
+  } else if (resultsId === 'lookupResults') {
+    showLookupMember(m);
+    loadLookupTxns(memberId);
+  }
+}
+
+function populateMemberCard(prefix, m) {
+  $(prefix + '-avatar').textContent = m.firstName[0] + m.lastName[0];
+  $(prefix + '-name').textContent = m.firstName + ' ' + m.lastName;
+  $(prefix + '-id').textContent = m.memberId + ' · ' + m.email;
+  const tierEl = $(prefix + '-tier');
+  tierEl.textContent = m.tier;
+  tierEl.className = 'mc-tier tier-' + m.tier;
+  if ($(prefix + '-pts')) $(prefix + '-pts').textContent = m.points.toLocaleString();
+  if ($(prefix + '-join')) $(prefix + '-join').textContent = m.joinDate || '—';
+  if ($(prefix + '-status')) $(prefix + '-status').textContent = m.status || 'ACTIVE';
+}
+
+// ── POINTS ──
+function calcPoints() {
+  const amount = parseFloat($('folioAmount').value);
+  if (isNaN(amount) || amount < 100) { $('pointsPreview').classList.remove('show'); return; }
+  const pts = Math.floor(amount / 100);
+  $('previewPts').textContent = pts.toLocaleString() + ' pts';
+  $('pointsPreview').classList.add('show');
+}
+
+async function submitPoints() {
+  if (!selectedPointsMember) return;
+  const amount = parseFloat($('folioAmount').value);
+  if (isNaN(amount) || amount < 100) { showAlert('pointsError','Minimum folio amount is ฿100'); return; }
+  hideAlert('pointsError');
+  hideAlert('pointsSuccess');
+
+  const ref = $('folioRef').value.trim();
+  const desc = ref ? 'Stay folio ฿' + amount.toLocaleString() + ' (' + ref + ')' : 'Stay folio ฿' + amount.toLocaleString();
+
+  const data = await gasPost('postPoints', {
+    memberId: selectedPointsMember.memberId,
+    folioAmount: amount,
+    description: desc,
+    postedBy: staffName,
+  });
+
+  if (data.success) {
+    let msg = data.message;
+    if (data.tierUpgraded) msg += ' — Tier upgraded to ' + data.newTier + '!';
+    showAlert('pointsSuccess', msg, 'success');
+    $('pm-pts').textContent = data.newBalance.toLocaleString();
+    $('folioAmount').value = '';
+    $('folioRef').value = '';
+    $('pointsPreview').classList.remove('show');
+    loadDashboard();
+  } else {
+    showAlert('pointsError', data.error || 'Failed to post points');
+  }
+}
+
+function clearPointsForm() {
+  selectedPointsMember = null;
+  $('pointsMemberCard').classList.remove('show');
+  $('pointsForm').style.display = 'none';
+  $('pointsSearch').value = '';
+  hideAlert('pointsError');
+  hideAlert('pointsSuccess');
+  $('pointsPreview').classList.remove('show');
+}
+
+// ── CATALOGUE & REDEEM ──
+async function loadCatalogue() {
+  try {
+    const data = await gasGet('getCatalogue', {});
+    if (data.success) catalogue = data.catalogue;
+  } catch {}
+}
+
+function renderRedeemCatalogue(memberPts) {
+  const grid = $('redeemCatGrid');
+  grid.innerHTML = catalogue.map(item => {
+    const enough = memberPts >= item.points;
+    return `<div class="cat-item ${enough ? '' : 'opacity-50'}" onclick="selectReward('${item.id}', ${enough})" data-id="${item.id}">
+      <div class="cat-pts">${item.points.toLocaleString()}</div>
+      <div class="cat-req" style="font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">points</div>
+      <div class="cat-name">${item.name}</div>
+      <div class="cat-req">${enough ? 'Available' : 'Need ' + (item.points - memberPts).toLocaleString() + ' more'}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectReward(rewardId, enough) {
+  if (!enough) { showAlert('redeemError','Member does not have enough points for this reward.'); return; }
+  selectedReward = catalogue.find(r => r.id === rewardId);
+  document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('selected'));
+  document.querySelector(`.cat-item[data-id="${rewardId}"]`).classList.add('selected');
+  $('confirmRedeemBtn').disabled = false;
+  hideAlert('redeemError');
+}
+
+async function submitRedeem() {
+  if (!selectedRedeemMember || !selectedReward) return;
+  $('confirmRedeemBtn').disabled = true;
+  hideAlert('redeemError');
+  hideAlert('redeemSuccess');
+
+  const data = await gasPost('redeemPoints', {
+    memberId: selectedRedeemMember.memberId,
+    rewardId: selectedReward.id,
+    postedBy: staffName,
+  });
+
+  if (data.success) {
+    showAlert('redeemSuccess', data.message, 'success');
+    $('rm-pts').textContent = data.newBalance.toLocaleString();
+    selectedReward = null;
+    document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('selected'));
+    renderRedeemCatalogue(data.newBalance);
+  } else {
+    showAlert('redeemError', data.error);
+    $('confirmRedeemBtn').disabled = false;
+  }
+}
+
+function clearRedeemForm() {
+  selectedRedeemMember = null;
+  selectedReward = null;
+  $('redeemMemberCard').classList.remove('show');
+  $('redeemForm').style.display = 'none';
+  $('redeemSearch').value = '';
+  hideAlert('redeemError');
+  hideAlert('redeemSuccess');
+}
+
+// ── LOOKUP ──
+function showLookupMember(m) {
+  populateMemberCard('lk', m);
+  $('lk-email').textContent = m.email;
+  $('lk-phone').textContent = m.phone;
+  $('lookupMemberCard').classList.add('show');
+}
+
+async function loadLookupTxns(memberId) {
+  try {
+    const data = await gasGet('getTransactions', { memberId: memberId });
+    if (data.success && data.transactions.length) {
+      const list = $('lookupTxnList');
+      list.innerHTML = data.transactions.slice(0, 20).map(function(t) {
+        var isEarn = t.type === 'EARN';
+        var d = new Date(t.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+        var ptColor = isEarn ? '#16a34a' : '#9b2c2c';
+        var bgColor = isEarn ? '#16a34a' : '#c9a84c';
+        var ptsStr = (isEarn ? '+' : '-') + Math.abs(t.points).toLocaleString() + ' pts';
+        return '<div style="display:flex;align-items:center;padding:0.7rem 1rem;border-bottom:1px solid var(--border);gap:0.75rem;font-size:0.8rem;">'
+          + '<div style="width:7px;height:7px;border-radius:50%;background:' + bgColor + ';flex-shrink:0;"></div>'
+          + '<div style="flex:1;">' + t.description + '<br><span style="font-size:0.68rem;color:var(--muted);">' + d + ' · by ' + t.postedBy + '</span></div>'
+          + '<div style="text-align:right;">'
+          + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1rem;color:' + ptColor + ';">' + ptsStr + '</div>'
+          + '<div style="font-size:0.65rem;color:var(--muted);">Balance: ' + t.balance.toLocaleString() + '</div>'
+          + '</div></div>';
+      }).join('');
+      $('lookupTxns').style.display = 'block';
+    }
+  } catch(e) { console.error(e); }
+}
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  const session = sessionStorage.getItem('ul_admin');
+  if (session) {
+    const s = JSON.parse(session);
+    if (Date.now() - s.ts < 8 * 60 * 60 * 1000) {
+      staffName = s.name;
+      $('adminLoginScreen').style.display = 'none';
+      $('adminPanel').style.display = 'block';
+      $('staffDisplay').textContent = s.name;
+      $('staffDisplay').style.display = 'block';
+      $('adminLogoutBtn').style.display = 'block';
+      loadDashboard();
+      loadCatalogue();
+      return;
+    }
+  }
+});
+
+$('adminPass').addEventListener('keydown', function(e) { if (e.key === 'Enter') adminLogin(); });
+</script>
+</body>
+</html>
