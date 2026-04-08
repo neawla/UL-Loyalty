@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Urbana Privileges</title>
+<title>My Urbana Elite</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#0d1b2a;--navy-mid:#1a2f45;--gold:#c9a84c;--gold-light:#e8c97a;--gold-pale:#f5eed8;--cream:#faf8f3;--text:#1a1a2e;--muted:#6b7280;--border:#ddd5c0;--error:#9b2c2c;--success:#1a5c3a;}
@@ -49,10 +49,10 @@ input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,
 .portal-id{font-size:0.72rem;letter-spacing:0.12em;color:rgba(255,255,255,0.4);}
 .tier-badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 1rem 0.4rem 0.6rem;border-radius:100px;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;margin-top:1rem;border:1px solid;}
 .tier-badge .dot{width:8px;height:8px;border-radius:50%;}
-.badge-MEMBER{background:rgba(136,135,128,0.15);border-color:rgba(136,135,128,0.4);color:#b4b2a9;}
-.badge-GOLD{background:rgba(186,117,23,0.15);border-color:rgba(186,117,23,0.4);color:#EF9F27;}
-.badge-PLATINUM{background:rgba(24,95,165,0.15);border-color:rgba(24,95,165,0.4);color:#85B7EB;}
-.badge-DIAMOND{background:rgba(83,74,183,0.15);border-color:rgba(83,74,183,0.4);color:#AFA9EC;}
+.badge-ELITE_ACCESS{background:rgba(136,135,128,0.15);border-color:rgba(136,135,128,0.4);color:#b4b2a9;}
+.badge-ELITE_PREFERRED{background:rgba(186,117,23,0.15);border-color:rgba(186,117,23,0.4);color:#EF9F27;}
+.badge-ELITE_PRIME{background:rgba(24,95,165,0.15);border-color:rgba(24,95,165,0.4);color:#85B7EB;}
+.badge-ELITE_PRESTIGE{background:rgba(83,74,183,0.15);border-color:rgba(83,74,183,0.4);color:#AFA9EC;}
 .points-display{margin-top:1.5rem;display:flex;align-items:baseline;gap:0.5rem;}
 .points-number{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:#fff;line-height:1;}
 .points-label{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.45);}
@@ -114,7 +114,7 @@ footer{background:var(--navy);color:rgba(255,255,255,0.3);text-align:center;padd
 
 <div id="loginScreen">
   <div class="login-screen">
-    <div class="login-eyebrow">Urbana Privileges</div>
+    <div class="login-eyebrow">Urbana Elite</div>
     <h1 class="login-title">Member portal</h1>
     <p class="login-sub">Sign in with your registered email. We'll send a one-time code — no password needed.</p>
 
@@ -125,7 +125,7 @@ footer{background:var(--navy);color:rgba(255,255,255,0.3);text-align:center;padd
       </div>
       <div class="alert alert-error" id="step1Error"></div>
       <button class="btn btn-primary" id="sendOTPBtn" onclick="sendOTP()">Send login code</button>
-      <div class="enroll-link">Not a member yet? <a href="index.html">Join Urbana Privileges</a></div>
+      <div class="enroll-link">Not a member yet? <a href="index.html">Join Urbana Elite</a></div>
     </div>
 
     <div class="step" id="step2">
@@ -148,9 +148,9 @@ footer{background:var(--navy);color:rgba(255,255,255,0.3);text-align:center;padd
       <div class="portal-greeting">Welcome back</div>
       <div class="portal-name" id="portalName">—</div>
       <div class="portal-id" id="portalId">Member ID: —</div>
-      <div id="tierBadge" class="tier-badge badge-MEMBER">
+      <div id="tierBadge" class="tier-badge badge-ELITE_ACCESS">
         <div class="dot" id="tierDot"></div>
-        <span id="tierLabel">Member</span>
+        <span id="tierLabel">Elite Access</span>
       </div>
       <div class="points-display">
         <div class="points-number" id="pointsNumber">0</div>
@@ -168,10 +168,10 @@ footer{background:var(--navy);color:rgba(255,255,255,0.3);text-align:center;padd
       <div class="card">
         <div class="card-title">Tier journey</div>
         <div class="tier-journey">
-          <div class="tier-step" id="tj-MEMBER"><div class="ts-dot" style="background:#888780;margin:auto;"></div><div class="ts-name">Member</div><div class="ts-pts">0 pts</div></div>
-          <div class="tier-step" id="tj-GOLD"><div class="ts-dot" style="background:#BA7517;margin:auto;"></div><div class="ts-name">Gold</div><div class="ts-pts">1,000 pts</div></div>
-          <div class="tier-step" id="tj-PLATINUM"><div class="ts-dot" style="background:#185FA5;margin:auto;"></div><div class="ts-name">Platinum</div><div class="ts-pts">3,000 pts</div></div>
-          <div class="tier-step" id="tj-DIAMOND"><div class="ts-dot" style="background:#534AB7;margin:auto;"></div><div class="ts-name">Diamond</div><div class="ts-pts">5,000 pts</div></div>
+          <div class="tier-step" id="tj-ELITE_ACCESS"><div class="ts-dot" style="background:#888780;margin:auto;"></div><div class="ts-name">Elite Access</div><div class="ts-pts">0 pts</div></div>
+          <div class="tier-step" id="tj-ELITE_PREFERRED"><div class="ts-dot" style="background:#BA7517;margin:auto;"></div><div class="ts-name">Elite Preferred</div><div class="ts-pts">1,000 pts</div></div>
+          <div class="tier-step" id="tj-ELITE_PRIME"><div class="ts-dot" style="background:#185FA5;margin:auto;"></div><div class="ts-name">Elite Prime</div><div class="ts-pts">3,000 pts</div></div>
+          <div class="tier-step" id="tj-ELITE_PRESTIGE"><div class="ts-dot" style="background:#534AB7;margin:auto;"></div><div class="ts-name">Elite Prestige</div><div class="ts-pts">5,000 pts</div></div>
         </div>
       </div>
       <div class="card">
@@ -322,7 +322,7 @@ function renderHeader(m) {
   $('tierDot').style.background = colors[m.tier];
   $('tierLabel').textContent = m.tierConfig.name;
   $('pointsNumber').textContent = m.points.toLocaleString();
-  var ranges = {MEMBER:{from:0,to:1000,next:'Gold'},GOLD:{from:1000,to:3000,next:'Platinum'},PLATINUM:{from:3000,to:5000,next:'Diamond'},DIAMOND:{from:5000,to:5000,next:null}};
+  var ranges = {MEMBER:{from:0,to:1000,next:'Elite Preferred'},GOLD:{from:1000,to:3000,next:'Elite Prime'},PLATINUM:{from:3000,to:5000,next:'Elite Prestige'},DIAMOND:{from:5000,to:5000,next:null}};
   var r = ranges[m.tier];
   if (r.next) {
     var pct = Math.min(100, ((m.points - r.from) / (r.to - r.from)) * 100);
@@ -341,7 +341,7 @@ function renderStats(m) {
 }
 
 function renderTierJourney(tier) {
-  ['MEMBER','GOLD','PLATINUM','DIAMOND'].forEach(function(t, i, arr) {
+  ['ELITE_ACCESS','ELITE_PREFERRED','ELITE_PRIME','ELITE_PRESTIGE'].forEach(function(t, i, arr) {
     var el = $('tj-' + t);
     if (el) el.classList.toggle('current', t === tier);
   });
