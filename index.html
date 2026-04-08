@@ -2,354 +2,75 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Join Urbana Privileges</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy: #0d1b2a;
-    --navy-mid: #1a2f45;
-    --gold: #c9a84c;
-    --gold-light: #e8c97a;
-    --gold-pale: #f5eed8;
-    --cream: #faf8f3;
-    --text: #1a1a2e;
-    --muted: #6b7280;
-    --border: #ddd5c0;
-    --error: #9b2c2c;
-    --success: #1a5c3a;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Jost', sans-serif;
-    background: var(--cream);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  /* ── HEADER ── */
-  header {
-    background: var(--navy);
-    padding: 0 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 72px;
-    border-bottom: 1px solid rgba(201,168,76,0.3);
-  }
-
-  .logo-block { display: flex; flex-direction: column; gap: 2px; }
-  .logo-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--gold-light);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .logo-sub {
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    color: rgba(201,168,76,0.6);
-    text-transform: uppercase;
-  }
-  .nav-link {
-    color: rgba(255,255,255,0.6);
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-  .nav-link:hover { color: var(--gold-light); }
-
-  /* ── HERO ── */
-  .hero {
-    background: var(--navy);
-    padding: 5rem 2rem 4rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .hero-eyebrow {
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-  }
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 300;
-    color: #fff;
-    line-height: 1.15;
-    margin-bottom: 1.25rem;
-  }
-  .hero-title em { color: var(--gold-light); font-style: italic; }
-  .hero-sub {
-    font-size: 0.875rem;
-    color: rgba(255,255,255,0.55);
-    letter-spacing: 0.05em;
-    max-width: 420px;
-    margin: 0 auto;
-    line-height: 1.8;
-  }
-
-  /* ── TIER STRIP ── */
-  .tier-strip {
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    background: var(--navy-mid);
-    border-top: 1px solid rgba(201,168,76,0.15);
-    border-bottom: 1px solid rgba(201,168,76,0.15);
-    overflow-x: auto;
-  }
-  .tier-item {
-    flex: 1;
-    min-width: 120px;
-    max-width: 200px;
-    padding: 1.25rem 1rem;
-    text-align: center;
-    border-right: 1px solid rgba(201,168,76,0.1);
-  }
-  .tier-item:last-child { border-right: none; }
-  .tier-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    margin: 0 auto 0.5rem;
-  }
-  .tier-pts {
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 0.2rem;
-  }
-  .tier-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    color: rgba(255,255,255,0.85);
-  }
-
-  /* ── MAIN FORM SECTION ── */
-  main {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem 5rem;
-  }
-
-  .section-label {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.75rem;
-  }
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.75rem;
-    font-weight: 400;
-    color: var(--navy);
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-  }
-  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-  .form-group.full { grid-column: 1 / -1; }
-
-  label {
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 500;
-  }
-  label .req { color: var(--gold); margin-left: 2px; }
-
-  input, select {
-    font-family: 'Jost', sans-serif;
-    font-size: 0.9rem;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: #fff;
-    color: var(--text);
-    transition: border-color 0.2s, box-shadow 0.2s;
-    width: 100%;
-    appearance: none;
-  }
-  input:focus, select:focus {
-    outline: none;
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
-  }
-  input.error { border-color: var(--error); }
-
-  .field-error {
-    font-size: 0.7rem;
-    color: var(--error);
-    display: none;
-  }
-  .field-error.show { display: block; }
-
-  /* ── CONSENT ── */
-  .consent-block {
-    margin-top: 1.5rem;
-    padding: 1.25rem;
-    background: var(--gold-pale);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-  }
-  .consent-row {
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-    margin-bottom: 0.75rem;
-  }
-  .consent-row:last-child { margin-bottom: 0; }
-  .consent-row input[type="checkbox"] {
-    width: 16px; height: 16px;
-    min-width: 16px;
-    margin-top: 2px;
-    accent-color: var(--navy);
-    padding: 0;
-    border: none;
-    box-shadow: none;
-  }
-  .consent-row input[type="checkbox"]:focus { box-shadow: none; }
-  .consent-text {
-    font-size: 0.8rem;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-  .consent-text strong { color: var(--text); font-weight: 500; }
-
-  /* ── SUBMIT ── */
-  .submit-area { margin-top: 2rem; }
-  .btn-submit {
-    width: 100%;
-    padding: 1rem;
-    background: var(--navy);
-    color: var(--gold-light);
-    font-family: 'Jost', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    position: relative;
-  }
-  .btn-submit:hover { background: var(--navy-mid); }
-  .btn-submit:active { transform: scale(0.99); }
-  .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-
-  .form-note {
-    margin-top: 1rem;
-    font-size: 0.72rem;
-    color: var(--muted);
-    text-align: center;
-    line-height: 1.6;
-  }
-  .form-note a { color: var(--navy); }
-
-  /* ── ALERTS ── */
-  .alert {
-    padding: 1rem 1.25rem;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    line-height: 1.6;
-    display: none;
-    margin-top: 1.25rem;
-  }
-  .alert.show { display: block; }
-  .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: var(--error); }
-  .alert-success {
-    background: #f0fdf4;
-    border: 1px solid #bbf7d0;
-    color: var(--success);
-    text-align: center;
-  }
-  .alert-success .member-id-display {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--navy);
-    margin: 0.75rem 0 0.25rem;
-    display: block;
-  }
-
-  /* ── SPINNER ── */
-  .spinner {
-    display: inline-block;
-    width: 14px; height: 14px;
-    border: 2px solid rgba(201,168,76,0.3);
-    border-top-color: var(--gold-light);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-    margin-right: 6px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── LOGIN LINK ── */
-  .login-prompt {
-    text-align: center;
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
-    font-size: 0.8rem;
-    color: var(--muted);
-  }
-  .login-prompt a {
-    color: var(--navy);
-    font-weight: 500;
-    text-decoration: none;
-    border-bottom: 1px solid var(--border);
-    transition: border-color 0.2s;
-  }
-  .login-prompt a:hover { border-color: var(--navy); }
-
-  /* ── FOOTER ── */
-  footer {
-    background: var(--navy);
-    color: rgba(255,255,255,0.35);
-    text-align: center;
-    padding: 2rem;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-  }
-
-  @media (max-width: 540px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .form-group.full { grid-column: 1; }
-  }
+:root {
+  --navy:#0d1b2a; --navy-mid:#1a2f45; --gold:#c9a84c;
+  --gold-light:#e8c97a; --gold-pale:#f5eed8; --cream:#faf8f3;
+  --text:#1a1a2e; --muted:#6b7280; --border:#ddd5c0;
+  --error:#9b2c2c; --success:#1a5c3a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+header{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:72px;border-bottom:1px solid rgba(201,168,76,0.3);}
+.logo-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--gold-light);letter-spacing:0.08em;text-transform:uppercase;}
+.logo-sub{font-size:0.6rem;letter-spacing:0.2em;color:rgba(201,168,76,0.6);text-transform:uppercase;}
+.nav-link{color:rgba(255,255,255,0.6);font-size:0.8rem;letter-spacing:0.1em;text-decoration:none;text-transform:uppercase;}
+.nav-link:hover{color:var(--gold-light);}
+.hero{background:var(--navy);padding:5rem 2rem 4rem;text-align:center;}
+.hero-eyebrow{font-size:0.7rem;letter-spacing:0.25em;color:var(--gold);text-transform:uppercase;margin-bottom:1.5rem;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:300;color:#fff;line-height:1.15;margin-bottom:1.25rem;}
+.hero-title em{color:var(--gold-light);font-style:italic;}
+.hero-sub{font-size:0.875rem;color:rgba(255,255,255,0.55);max-width:420px;margin:0 auto;line-height:1.8;}
+.tier-strip{display:flex;background:var(--navy-mid);border-top:1px solid rgba(201,168,76,0.15);border-bottom:1px solid rgba(201,168,76,0.15);overflow-x:auto;}
+.tier-item{flex:1;min-width:120px;padding:1.25rem 1rem;text-align:center;border-right:1px solid rgba(201,168,76,0.1);}
+.tier-item:last-child{border-right:none;}
+.tier-dot{width:8px;height:8px;border-radius:50%;margin:0 auto 0.5rem;}
+.tier-pts{font-size:0.7rem;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;margin-bottom:0.2rem;}
+.tier-name{font-family:'Cormorant Garamond',serif;font-size:1rem;color:rgba(255,255,255,0.85);}
+main{max-width:680px;margin:0 auto;padding:3rem 1.5rem 5rem;}
+.section-label{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:400;color:var(--navy);margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+.form-group{display:flex;flex-direction:column;gap:0.4rem;}
+.form-group.full{grid-column:1/-1;}
+label{font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-weight:500;}
+label .req{color:var(--gold);margin-left:2px;}
+input:not([type="checkbox"]),select{font-family:'Jost',sans-serif;font-size:0.9rem;padding:0.75rem 1rem;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--text);width:100%;appearance:none;transition:border-color 0.2s;}
+input:not([type="checkbox"]):focus,select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.12);}
+input[type="checkbox"]{width:16px;height:16px;accent-color:var(--navy);cursor:pointer;appearance:auto;}
+input.error{border-color:var(--error);}
+.field-error{font-size:0.7rem;color:var(--error);display:none;}
+.field-error.show{display:block;}
+.consent-block{margin-top:1.5rem;padding:1.25rem;background:var(--gold-pale);border:1px solid var(--border);border-radius:4px;}
+.consent-row{display:flex;gap:0.75rem;align-items:flex-start;margin-bottom:0.75rem;}
+.consent-row:last-child{margin-bottom:0;}
+.consent-text{font-size:0.8rem;color:var(--muted);line-height:1.6;cursor:pointer;}
+.submit-area{margin-top:2rem;}
+.btn-submit{width:100%;padding:1rem;background:var(--navy);color:var(--gold-light);font-family:'Jost',sans-serif;font-size:0.8rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;border:none;border-radius:4px;cursor:pointer;transition:background 0.2s;}
+.btn-submit:hover{background:var(--navy-mid);}
+.btn-submit:disabled{opacity:0.6;cursor:not-allowed;}
+.form-note{margin-top:1rem;font-size:0.72rem;color:var(--muted);text-align:center;line-height:1.6;}
+.form-note a{color:var(--navy);}
+.alert{padding:1rem 1.25rem;border-radius:4px;font-size:0.85rem;line-height:1.6;display:none;margin-top:1.25rem;}
+.alert.show{display:block;}
+.alert-error{background:#fef2f2;border:1px solid #fecaca;color:var(--error);}
+.alert-success{background:#f0fdf4;border:1px solid #bbf7d0;color:var(--success);text-align:center;}
+.member-id-display{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;letter-spacing:0.1em;color:var(--navy);margin:0.75rem 0 0.25rem;display:block;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(201,168,76,0.3);border-top-color:var(--gold-light);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.login-prompt{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--muted);}
+.login-prompt a{color:var(--navy);font-weight:500;text-decoration:none;border-bottom:1px solid var(--border);}
+footer{background:var(--navy);color:rgba(255,255,255,0.35);text-align:center;padding:2rem;font-size:0.7rem;letter-spacing:0.1em;}
+@media(max-width:540px){.form-grid{grid-template-columns:1fr;}.form-group.full{grid-column:1;}}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="logo-block">
+  <div>
     <div class="logo-name">Urbana Langsuan</div>
     <div class="logo-sub">Hotel &amp; Residence</div>
   </div>
@@ -363,26 +84,10 @@
 </section>
 
 <div class="tier-strip">
-  <div class="tier-item">
-    <div class="tier-dot" style="background:#888780;"></div>
-    <div class="tier-pts">0 pts</div>
-    <div class="tier-name">Member</div>
-  </div>
-  <div class="tier-item">
-    <div class="tier-dot" style="background:#c9a84c;"></div>
-    <div class="tier-pts">1,000 pts</div>
-    <div class="tier-name">Gold</div>
-  </div>
-  <div class="tier-item">
-    <div class="tier-dot" style="background:#378ADD;"></div>
-    <div class="tier-pts">3,000 pts</div>
-    <div class="tier-name">Platinum</div>
-  </div>
-  <div class="tier-item">
-    <div class="tier-dot" style="background:#7F77DD;"></div>
-    <div class="tier-pts">5,000 pts</div>
-    <div class="tier-name">Diamond</div>
-  </div>
+  <div class="tier-item"><div class="tier-dot" style="background:#888780;"></div><div class="tier-pts">0 pts</div><div class="tier-name">Member</div></div>
+  <div class="tier-item"><div class="tier-dot" style="background:#c9a84c;"></div><div class="tier-pts">1,000 pts</div><div class="tier-name">Gold</div></div>
+  <div class="tier-item"><div class="tier-dot" style="background:#378ADD;"></div><div class="tier-pts">3,000 pts</div><div class="tier-name">Platinum</div></div>
+  <div class="tier-item"><div class="tier-dot" style="background:#7F77DD;"></div><div class="tier-pts">5,000 pts</div><div class="tier-name">Diamond</div></div>
 </div>
 
 <main>
@@ -392,56 +97,41 @@
   <div id="form-view">
     <form id="enrollForm" novalidate>
       <div class="form-grid">
-
         <div class="form-group">
           <label for="firstName">First name <span class="req">*</span></label>
           <input type="text" id="firstName" placeholder="Given name" autocomplete="given-name">
           <span class="field-error" id="err-firstName">Please enter your first name</span>
         </div>
-
         <div class="form-group">
           <label for="lastName">Last name <span class="req">*</span></label>
           <input type="text" id="lastName" placeholder="Family name" autocomplete="family-name">
           <span class="field-error" id="err-lastName">Please enter your last name</span>
         </div>
-
         <div class="form-group full">
           <label for="email">Email address <span class="req">*</span></label>
           <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
           <span class="field-error" id="err-email">Please enter a valid email address</span>
         </div>
-
         <div class="form-group">
           <label for="phone">Phone number <span class="req">*</span></label>
           <input type="tel" id="phone" placeholder="+66 8x xxx xxxx" autocomplete="tel">
           <span class="field-error" id="err-phone">Please enter your phone number</span>
         </div>
-
         <div class="form-group">
           <label for="nationality">Nationality</label>
           <select id="nationality">
             <option value="">— Select —</option>
-            <option>Thai</option>
-            <option>Chinese</option>
-            <option>Japanese</option>
-            <option>Korean</option>
-            <option>Indian</option>
-            <option>American</option>
-            <option>British</option>
-            <option>German</option>
-            <option>French</option>
-            <option>Australian</option>
-            <option>Singapore</option>
-            <option>Malaysian</option>
+            <option>Thai</option><option>Chinese</option><option>Japanese</option>
+            <option>Korean</option><option>Indian</option><option>American</option>
+            <option>British</option><option>German</option><option>French</option>
+            <option>Australian</option><option>Singapore</option><option>Malaysian</option>
             <option>Other</option>
           </select>
         </div>
-
         <div class="form-group full">
           <label for="dob">Date of birth</label>
           <input type="date" id="dob" autocomplete="bday">
         </div>
-
       </div>
 
       <div class="consent-block">
@@ -460,13 +150,9 @@
       </div>
 
       <div class="submit-area">
-        <button type="submit" class="btn-submit" id="submitBtn">
-          Create my membership
-        </button>
+        <button type="submit" class="btn-submit" id="submitBtn">Create my membership</button>
         <div class="alert alert-error" id="formError"></div>
-        <p class="form-note">
-          Already a member? <a href="portal.html">Sign in to your portal →</a>
-        </p>
+        <p class="form-note">Already a member? <a href="portal.html">Sign in to your portal →</a></p>
       </div>
     </form>
   </div>
@@ -476,118 +162,102 @@
       <div style="font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:#166534;margin-bottom:0.5rem;">Welcome to Urbana Privileges</div>
       <span class="member-id-display" id="displayMemberId">—</span>
       <div style="font-size:0.8rem;color:#166534;margin-top:0.25rem;">Your Member ID — save this for future reference</div>
-      <p style="margin-top:1.25rem;font-size:0.82rem;color:#15803d;line-height:1.7;">
-        A confirmation email has been sent with your membership details.<br>
-        You can now access your member portal to view your points and benefits.
-      </p>
+      <p style="margin-top:1.25rem;font-size:0.82rem;color:#15803d;line-height:1.7;">A confirmation email has been sent with your membership details.</p>
       <div style="margin-top:1.5rem;">
-        <a href="portal.html" style="display:inline-block;padding:0.75rem 2rem;background:#0d1b2a;color:#e8c97a;font-family:'Jost',sans-serif;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;border-radius:4px;">
-          Go to member portal →
-        </a>
+        <a href="portal.html" style="display:inline-block;padding:0.75rem 2rem;background:#0d1b2a;color:#e8c97a;font-family:'Jost',sans-serif;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;border-radius:4px;">Go to member portal →</a>
       </div>
     </div>
   </div>
 
-  <div class="login-prompt">
-    Already enrolled? <a href="portal.html">Access your member portal</a>
-  </div>
+  <div class="login-prompt">Already enrolled? <a href="portal.html">Access your member portal</a></div>
 </main>
 
-<footer>
-  &copy; 2025 Urbana Langsuan Hotel &amp; Residence &nbsp;|&nbsp; Operated by Vari Asset Co., Ltd.
-</footer>
+<footer>&copy; 2025 Urbana Langsuan Hotel &amp; Residence &nbsp;|&nbsp; Operated by Vari Asset Co., Ltd.</footer>
 
 <script>
-  const API_URL = 'YOUR_GAS_WEB_APP_URL_HERE'; // Replace after deploying GAS
+var API_URL = 'https://script.google.com/macros/s/AKfycbzwxZgg685hGkVyPammqldac4zgnkY-vCuUe8mbMHzTIKVxDlhvD6fdDRg4ALAavjEa/exec';
 
-  function $(id) { return document.getElementById(id); }
-
-  function gasCall(action, params) {
-    var qs = 'action=' + encodeURIComponent(action);
-    for (var k in params) {
-      if (params[k] !== undefined && params[k] !== null) {
-        qs += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
-      }
+function gasCall(action, params) {
+  var qs = 'action=' + encodeURIComponent(action);
+  for (var k in params) {
+    if (params[k] !== undefined && params[k] !== null) {
+      qs += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
     }
-    var url = API_URL + '?' + qs;
-    var proxied = 'https://corsproxy.io/?' + encodeURIComponent(url);
-    return fetch(proxied)
-      .then(function(r) { return r.json(); })
-      .catch(function(e) { throw new Error('Connection error: ' + e.message); });
   }
+  var url = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(API_URL + '?' + qs);
+  return fetch(url).then(function(r) { return r.json(); });
+}
 
-  function validate() {
-    let valid = true;
-    const fields = [
-      { id: 'firstName', test: v => v.trim().length >= 1 },
-      { id: 'lastName',  test: v => v.trim().length >= 1 },
-      { id: 'email',     test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
-      { id: 'phone',     test: v => v.trim().length >= 6 },
-    ];
-    fields.forEach(f => {
-      const el = $(f.id);
-      const ok = f.test(el.value);
-      el.classList.toggle('error', !ok);
-      $('err-' + f.id).classList.toggle('show', !ok);
-      if (!ok) valid = false;
-    });
-    if (!$('terms').checked) {
-      $('formError').textContent = 'Please accept the Terms & Conditions to continue.';
-      $('formError').classList.add('show');
-      valid = false;
+function $(id) { return document.getElementById(id); }
+
+function validate() {
+  var valid = true;
+  var fields = [
+    { id:'firstName', test:function(v){return v.trim().length>=1;} },
+    { id:'lastName',  test:function(v){return v.trim().length>=1;} },
+    { id:'email',     test:function(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);} },
+    { id:'phone',     test:function(v){return v.trim().length>=6;} },
+  ];
+  fields.forEach(function(f) {
+    var el = $(f.id);
+    var ok = f.test(el.value);
+    el.classList.toggle('error', !ok);
+    $('err-'+f.id).classList.toggle('show', !ok);
+    if (!ok) valid = false;
+  });
+  if (!$('terms').checked) {
+    $('formError').textContent = 'Please accept the Terms & Conditions to continue.';
+    $('formError').classList.add('show');
+    valid = false;
+  } else {
+    $('formError').classList.remove('show');
+  }
+  return valid;
+}
+
+$('enrollForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  if (!validate()) return;
+
+  var btn = $('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Creating membership\u2026';
+
+  var payload = {
+    firstName:   $('firstName').value.trim(),
+    lastName:    $('lastName').value.trim(),
+    email:       $('email').value.trim().toLowerCase(),
+    phone:       $('phone').value.trim(),
+    nationality: $('nationality').value,
+    dob:         $('dob').value,
+    marketing:   $('marketing').checked,
+  };
+
+  gasCall('enroll', payload).then(function(data) {
+    if (data.success) {
+      $('displayMemberId').textContent = data.memberId;
+      $('form-view').style.display = 'none';
+      $('success-view').style.display = 'block';
     } else {
-      $('formError').classList.remove('show');
-    }
-    return valid;
-  }
-
-  $('enrollForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    if (!validate()) return;
-
-    const btn = $('submitBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Creating membership…';
-
-    const payload = {
-      action: 'enroll',
-      firstName: $('firstName').value.trim(),
-      lastName:  $('lastName').value.trim(),
-      email:     $('email').value.trim().toLowerCase(),
-      phone:     $('phone').value.trim(),
-      nationality: $('nationality').value,
-      dob:       $('dob').value,
-      marketing: $('marketing').checked,
-    };
-
-    try {
-      const data = await gasCall('enroll', payload);
-
-      if (data.success) {
-        $('displayMemberId').textContent = data.memberId;
-        $('form-view').style.display = 'none';
-        $('success-view').style.display = 'block';
-      } else {
-        $('formError').textContent = data.error || 'Enrollment failed. Please try again.';
-        $('formError').classList.add('show');
-        btn.disabled = false;
-        btn.innerHTML = 'Create my membership';
-      }
-    } catch (err) {
-      $('formError').textContent = 'Connection error. Please check your internet and try again.';
+      $('formError').textContent = data.error || 'Enrollment failed. Please try again.';
       $('formError').classList.add('show');
       btn.disabled = false;
       btn.innerHTML = 'Create my membership';
     }
+  }).catch(function(err) {
+    $('formError').textContent = 'Connection error. Please try again.';
+    $('formError').classList.add('show');
+    btn.disabled = false;
+    btn.innerHTML = 'Create my membership';
   });
+});
 
-  // Clear field error on input
-  ['firstName','lastName','email','phone'].forEach(id => {
-    $(id).addEventListener('input', () => {
-      $(id).classList.remove('error');
-      $('err-' + id).classList.remove('show');
-    });
+['firstName','lastName','email','phone'].forEach(function(id) {
+  $(id).addEventListener('input', function() {
+    $(id).classList.remove('error');
+    $('err-'+id).classList.remove('show');
   });
+});
 </script>
 </body>
 </html>
