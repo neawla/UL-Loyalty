@@ -318,11 +318,11 @@ function renderHeader(m) {
   $('portalId').textContent = 'Member ID: ' + m.memberId;
   var badge = $('tierBadge');
   badge.className = 'tier-badge badge-' + m.tier;
-  var colors = {MEMBER:'#888780',GOLD:'#EF9F27',PLATINUM:'#85B7EB',DIAMOND:'#AFA9EC'};
+  var colors = {ELITE_ACCESS:'#888780',ELITE_PREFERRED:'#EF9F27',ELITE_PRIME:'#85B7EB',ELITE_PRESTIGE:'#AFA9EC'};
   $('tierDot').style.background = colors[m.tier];
   $('tierLabel').textContent = m.tierConfig.name;
   $('pointsNumber').textContent = m.points.toLocaleString();
-  var ranges = {MEMBER:{from:0,to:1000,next:'Elite Preferred'},GOLD:{from:1000,to:3000,next:'Elite Prime'},PLATINUM:{from:3000,to:5000,next:'Elite Prestige'},DIAMOND:{from:5000,to:5000,next:null}};
+  var ranges = {ELITE_ACCESS:{from:0,to:1000,next:'Elite Preferred'},ELITE_PREFERRED:{from:1000,to:3000,next:'Elite Prime'},ELITE_PRIME:{from:3000,to:5000,next:'Elite Prestige'},ELITE_PRESTIGE:{from:5000,to:5000,next:null}};
   var r = ranges[m.tier];
   if (r.next) {
     var pct = Math.min(100, ((m.points - r.from) / (r.to - r.from)) * 100);

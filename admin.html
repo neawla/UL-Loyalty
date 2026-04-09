@@ -149,7 +149,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 
           <div class="stat-card"><div class="stat-label">Total members</div><div class="stat-value" id="dash-total">—</div></div>
           <div class="stat-card"><div class="stat-label">New this month</div><div class="stat-value" id="dash-new">—</div></div>
           <div class="stat-card"><div class="stat-label">Points earned (month)</div><div class="stat-value" id="dash-earned">—</div></div>
-          <div class="stat-card"><div class="stat-label">Gold / Platinum / Diamond</div><div class="stat-value" id="dash-tiers">—</div></div>
+          <div class="stat-card"><div class="stat-label">Preferred / Prime / Prestige</div><div class="stat-value" id="dash-tiers">—</div></div>
         </div>
         <div class="form-section">
           <div class="form-section-title">Quick member search</div>
@@ -280,6 +280,16 @@ function $(id) { return document.getElementById(id); }
 function showAlert(id, msg, type) { var el=$(id); el.textContent=msg; el.className='alert alert-'+(type||'error')+' show'; }
 function hideAlert(id) { $(id).classList.remove('show'); }
 
+function tierName(code) {
+  var names = {
+    'ELITE_ACCESS':    'Elite Access',
+    'ELITE_PREFERRED': 'Elite Preferred',
+    'ELITE_PRIME':     'Elite Prime',
+    'ELITE_PRESTIGE':  'Elite Prestige',
+  };
+  return names[code] || code;
+}
+
 function adminLogin() {
   var name = $('staffName').value.trim();
   var pass = $('adminPass').value;
@@ -351,7 +361,7 @@ function renderResults(results, resultsId, context) {
     return '<div class="result-item" onclick="selectMember(\''+r.memberId+'\',\''+resultsId+'\',\''+context+'\')">'
       +'<div><div class="result-name">'+r.firstName+' '+r.lastName+'</div>'
       +'<div class="result-meta">'+r.memberId+' &nbsp;&middot;&nbsp; '+r.email+'</div></div>'
-      +'<span class="mc-tier tier-'+r.tier+'" style="font-size:0.6rem;">'+r.tier+'</span>'
+      +'<span class="mc-tier tier-'+r.tier+'" style="font-size:0.6rem;">'+tierName(r.tier)+'</span>'
       +'<div class="result-pts">'+r.points.toLocaleString()+' pts</div>'
       +'</div>';
   }).join('');
@@ -393,7 +403,7 @@ function populateMemberCard(prefix, m) {
   $(prefix+'-name').textContent = m.firstName+' '+m.lastName;
   $(prefix+'-id').textContent = m.memberId+' · '+m.email;
   var tierEl = $(prefix+'-tier');
-  tierEl.textContent = m.tier;
+  tierEl.textContent = tierName(m.tier);
   tierEl.className = 'mc-tier tier-'+m.tier;
   if ($(prefix+'-pts')) $(prefix+'-pts').textContent = m.points.toLocaleString();
   if ($(prefix+'-join')) $(prefix+'-join').textContent = m.joinDate||'—';
